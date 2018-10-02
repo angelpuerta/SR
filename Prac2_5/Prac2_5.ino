@@ -131,7 +131,7 @@ void loop() {
       cerrar();
     }
     bufferLectura = "";
-    delay(2000);
+    delay(1000);
   }
   updateContador();
   delay(200);
