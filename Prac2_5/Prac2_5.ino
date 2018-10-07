@@ -109,7 +109,6 @@ void loop() {
   Serial.println(bufferLectura);
   if (hayAlgoInterior()) {
     abrir();
-    while(!(hayAlgoExterior() && !hayAlgoInterior()))
       delay(5);
     cerrar();
   } else if (bufferLectura.length() >= 4) {
@@ -117,22 +116,16 @@ void loop() {
       digitalWrite(GREEN_LED, LOW);
       delay(1000);
       abrir();
-      double inicioCuentaTiempo = millis();
-      while(millis() - inicioCuentaTiempo < 5000) {
-        if (hayAlgoInterior() && hayAlgoExterior())
           inicioCuentaTiempo = millis();
-        else if (teclado.getKey() == 'C' || (hayAlgoInterior() && !hayAlgoExterior()))
           break;
-      }
-      contador++;
-      cerrar();
-    } else { //Contraseña incorrecta
       parpadear();
       cerrar();
     }
+<<<<<<< HEAD
     bufferLectura = "";
     delay(1000);
+=======
+>>>>>>> prac2_5Revision
   }
   updateContador();
-  delay(200);
 }
