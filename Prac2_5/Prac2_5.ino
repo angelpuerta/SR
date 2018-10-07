@@ -37,6 +37,7 @@ int contador = 0;
 void abrir() {
   digitalWrite(RED_LED, HIGH);
   digitalWrite(GREEN_LED, LOW);
+  contador++;
 }
 
 void cerrar() {
@@ -109,30 +110,39 @@ void loop() {
   Serial.println(bufferLectura);
   if (hayAlgoInterior()) {
     abrir();
-    while(!(hayAlgoExterior() && !hayAlgoInterior()))
+    while(hayAlgoExterior() || hayAlgoInterior())
       delay(5);
     cerrar();
   } else if (bufferLectura.length() >= 4) {
     if (bufferLectura.equals(PASSWORD)) { //Es correcta
       digitalWrite(GREEN_LED, LOW);
       delay(1000);
+      puerta_abierta:
       abrir();
-      double inicioCuentaTiempo = millis();
-      while(millis() - inicioCuentaTiempo < 5000) {
-        if (hayAlgoInterior() && hayAlgoExterior())
+      if(!hayAlgoInterior()){
+        double inicioCuentaTiempo = millis();
+        while(millis() - inicioCuentaTiempo < 5000) {
+        if (hayAlgoExterior())
           inicioCuentaTiempo = millis();
-        else if (teclado.getKey() == 'C' || (hayAlgoInterior() && !hayAlgoExterior()))
+        else if (teclado.getKey() == 'C')
           break;
-      }
-      contador++;
-      cerrar();
-    } else { //Contraseña incorrecta
+        }
+        cerrar();
+        bufferLectura = "";
+     } else if (hayAlgoInterior() && hayAlgoExterior()){
+       goto puerta_abierta; 
+     } else if (hayAlgoInterior() && !hayAlgoExterior()){
+        cerrar(); 
+        bufferLectura = ""; 
+     }
+    }
+     else { //Contraseña incorrecta
+      bufferLectura = "";
       parpadear();
       cerrar();
     }
-    bufferLectura = "";
     delay(2000);
   }
   updateContador();
-  delay(200);
+  delay(5);
 }
