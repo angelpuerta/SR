@@ -1,8 +1,9 @@
 #include <TM1637.h>
 #include <Keypad.h>
 
-#define GREEN_LED 7
 #define RED_LED 8
+#define GREEN_LED 7
+#define BLUE_LED 6
 
 #define PIN_CLK 10
 #define PIN_DIO 12
@@ -30,21 +31,32 @@ byte pcolumnas[ncolumnas] = {A0, A1, A2, A3}; //Columnas
 Keypad teclado = Keypad(makeKeymap(teclas), pfilas, pcolumnas, nfilas, ncolumnas);
 TM1637 screen(PIN_CLK, PIN_DIO);
 
+int segundos = 5;
 String bufferLectura = "";
 
 int contador = 0;
 
-void abrir() {
-  digitalWrite(RED_LED, HIGH);
-  digitalWrite(GREEN_LED, LOW);
-}
-
 void cerrar() {
   digitalWrite(RED_LED, LOW);
   digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(BLUE_LED, LOW);
+}
+
+void entrar() {
+  digitalWrite(RED_LED, HIGH);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(BLUE_LED, LOW);
+}
+
+void salir() {
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(BLUE_LED, HIGH);
 }
 
 void parpadear() {
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(BLUE_LED, LOW);
   for(int i = 0; i<3; i++){
     digitalWrite(GREEN_LED, LOW);
     delay(100);
@@ -55,7 +67,9 @@ void parpadear() {
 
 void updateBuffer() {
   char c = teclado.getKey();
-  if (c != '\0' && isDigit(c)) {
+  if (c == '*') {
+    configurar();
+  } else if (c != '\0' && isDigit(c)) {
     bufferLectura += c;
   }
 }
@@ -91,9 +105,25 @@ void updateContador() {
  screen.display(3, digit3);
 }
 
+void configurar() {
+  Serial.println("Configurar");
+  String seg = "";
+  while(true) {
+      char c = teclado.getKey();
+      if (c == '*')
+        break;
+      else if (c != '\0' && isDigit(c)) 
+        seg += c;
+      delay(5);
+  }
+  Serial.println("Cambiado a: " + seg);
+  segundos = seg.toInt();
+}
+
 void setup() {
-  pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BLUE_LED, OUTPUT);
   pinMode(PIN_TRIG, OUTPUT); 
   pinMode(PIN_ECHO, INPUT); 
   pinMode(PIN_SLUZ, INPUT);
@@ -108,41 +138,31 @@ void loop() {
   updateBuffer();
   Serial.println(bufferLectura);
   if (hayAlgoInterior()) {
-    abrir();
-    while(hayAlgoExterior() || hayAlgoInterior())
+    salir();
+    while(!(hayAlgoExterior() && !hayAlgoInterior()))
       delay(5);
     cerrar();
   } else if (bufferLectura.length() >= 4) {
     if (bufferLectura.equals(PASSWORD)) { //Es correcta
       digitalWrite(GREEN_LED, LOW);
       delay(1000);
-      puerta_abierta:
-      abrir();
-      if(!hayAlgoInterior()) {
-        double inicioCuentaTiempo = millis();
-        while(millis() - inicioCuentaTiempo < 5000) {
-        if (hayAlgoExterior())
+      entrar();
+      double inicioCuentaTiempo = millis();
+      while(millis() - inicioCuentaTiempo < segundos * 1000) {
+        if (hayAlgoInterior() && hayAlgoExterior())
           inicioCuentaTiempo = millis();
-        else if (teclado.getKey() == 'C')
+        else if (teclado.getKey() == 'C' || (hayAlgoInterior() && !hayAlgoExterior()))
           break;
-        }
-        contador++;
-        cerrar();
-        bufferLectura = "";
-     } else if (hayAlgoInterior() && hayAlgoExterior()){
-       goto puerta_abierta; 
-     } else if (hayAlgoInterior() && !hayAlgoExterior()){
-        cerrar(); 
-        contador++;
-        bufferLectura = ""; 
-     }
+      }
+      contador++;
+      cerrar();
     } else { //Contraseña incorrecta
       parpadear();
       cerrar();
-      bufferLectura = "";
     }
-    delay(1000);
+    bufferLectura = "";
+    delay(2000);
   }
   updateContador();
-  delay(150);
+  delay(200);
 }
