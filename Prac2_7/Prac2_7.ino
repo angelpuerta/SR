@@ -27,6 +27,9 @@ TM1637 screen(PIN_CLK, PIN_DIO);
 int c1 = 0;
 int c2 = 0;
 
+int rondas = 3;
+int dificultad = 2; //Del 1 al 3
+
 void displayScores() {
   displayScore(c1, 0);
   displayScore(c2, 2);
@@ -39,12 +42,91 @@ void displayScore(int n, int displayNumber) {
   screen.display(displayNumber + 1, second);
 }
 
+//Menu
+
+int preguntarOp() {
+  Serial.print("Introduzca la opción: ");
+  while (Serial.available() <= 0)
+    delay(5);
+  return Serial.parseInt();
+}
+
+void cambiarDificultad() {
+  Serial.println("Dificultad actual: " + dificultad);
+  int op = preguntarOp();
+  while (op < 1 || op > 3) 
+    op = preguntarOp(); 
+  dificultad = op;
+  Serial.println("Dificultad cambiada a: " + dificultad);
+}
+
+void cambiarRondas() {
+  Serial.println("Rondas actuales: " + rondas);
+  int op = preguntarOp();
+  while (op < 1 || op > 3) 
+    op = preguntarOp(); 
+  rondas = op;
+  Serial.println("Rondas cambiadas a: " + rondas);
+}
+
+void configurar() {
+  //Imprimir menu
+  Serial.println("---Menu del juego---");
+  Serial.println("  1 - Cambiar dificultad");
+  Serial.println("  2 - Cambiar rondas");
+  Serial.println("  3 - Comenzar juego");
+  bool configurando = true;
+  while (configurando) {
+    //Preguntar opcion
+    int op = preguntarOp();
+    while (op < 1 || op > 3) 
+      op = preguntarOp();
+    //Ejecutar
+    switch (op) {
+      case 1:
+      cambiarDificultad();
+      break;
+      case 2:
+      cambiarRondas();
+      break;
+      case 3:
+      configurando = false;
+      break;
+    }
+  }
+}
+
+//Juego
+
+void juego() {
+  while (int ronda = 1;ronda <= rondas;ronda++) {
+    Serial.println("Ronda: " + ronda);
+    //Generar problema
+    
+    //Preguntar
+    
+  }
+  //Decir ganador
+  if (c1 == c2)
+    Serial.println("Empate");
+  else if (c1 > c2)
+    Serial.println("Ha ganado el jugador 1");
+  else
+    Serial.println("Ha ganado el jugador 2");
+  //Reiniciar contadores
+  c1 = 0;
+  c2 = 0;
+}
+
 void setup() {
   screen.init();
   screen.set(BRIGHT_TYPICAL);
+  Serial.begin(9600);
+  Serial.println("Juego matemático V1.0");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  configurar();
+  Serial.println("Juego comenzado!!!");
+  juego();
 }
