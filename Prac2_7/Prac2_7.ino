@@ -1,7 +1,7 @@
 #include <TM1637.h>
 #include <Keypad.h>
 
-#define PIN_CLK 11
+#define PIN_CLK 10
 #define PIN_DIO 12
 
 const byte nfilas = 4;
@@ -109,7 +109,8 @@ void generarProblema() {
     int maxNum = pow(10, dificultad);
     int n1 = random(minNum,maxNum);
     int n2 = random(minNum,maxNum);
-    int op = random(1,5);
+    int aux = 0;
+    int op = random(1,4);
     char opC = ' ';
     switch(op) {
       case 1:
@@ -117,16 +118,17 @@ void generarProblema() {
         opC = '+';
       break;
       case 2:
+        if(n1 - n2 < 0){
+          aux  = n1;
+          n1 = n2;
+          n2 = aux;
+        }
         sol = n1 - n2;
         opC = '-';
       break;
       case 3:
         sol = n1 * n2;
         opC = '*';
-      break;
-      case 4:
-        sol = n1 / n2;
-        opC = '/';
       break;
     }
     char problema[32];
@@ -157,7 +159,7 @@ void preguntarJugador(int &score) {
     delay(15);
   }
   long t = millis() - t1;
-  score += (dificultad * 100000)/ t;
+  score += (dificultad * 50000)/ t;
 }
 
 void preguntar() {
@@ -176,6 +178,7 @@ void juego() {
     generarProblema();
     //Preguntar
     preguntar();
+    displayScores();
   }
   //Decir ganador
   if (c1 == c2)
@@ -196,6 +199,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Juego matematico V1.0");
   randomSeed(analogRead(0));
+  displayScores();
 }
 
 void loop() {

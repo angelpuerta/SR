@@ -37,7 +37,15 @@ bool isNumber(char number){
 }
 bool isSymbol(char number){
   if(number == '+'|| number == '-'||number == '/'||
-    number == '#'||number == '='){
+    number == '#'||number == '=' || number == '*'){
+        return true;
+      }
+  else{
+    return false;
+  }
+}
+bool isOperatingSymbol(char symbol){
+    if(symbol == '+'|| symbol == '-'||symbol == '/' || symbol=='*'){
         return true;
       }
   else{
@@ -60,7 +68,9 @@ void operateNumbers(){
     else
       number1=number2/number1;
   }
-  screen.set(number1);
+  
+  updateScreen(number1);
+  delay(250);
 }
 
 //Metodo para resetear los valores de serie despues de acabar una operacion
@@ -69,21 +79,39 @@ void resetValues(){
   number2 = 0;
   operation = '+'; 
   screen.set(number1);
+  screen.display(0, 0);
+  screen.display(1, 0);
+  screen.display(2, 0);
+  screen.display(3, 0);
+}
+
+void updateScreen(int contador) {
+ int digit0 =  contador/1000;
+ int digit1 = (contador - digit0*1000)/100;
+ int digit2 = (contador - (digit0*1000 + digit1*100))/10;
+ int digit3 =  contador - (digit0*1000 + digit1*100 + digit2*10);
+
+ screen.display(0, digit0);
+ screen.display(1, digit1);
+ screen.display(2, digit2);
+ screen.display(3, digit3);
 }
 
 //Metodo para guardar los dos numeros y operar si se pulsa '=' 
 void getOperators(){
   char actual = t1.getKey();
   Serial.println(actual);
+  delay(250);
   if(isNumber(actual)){
     number1 = number1*10+(actual-'0');
-     screen.set(number1);
+     updateScreen(number1);
   }
    if(isSymbol(actual)){
+    if(isOperatingSymbol(actual)){
     operation = actual;
     number2 = number1;
     number1 = 0;
-    screen.set(number1);
+    }else{
     if(actual == '='){
       operateNumbers();
     }else if(actual == '#'){
@@ -91,7 +119,9 @@ void getOperators(){
         resetValues();
       }else{
         number1 = number1/10;
+        updateScreen(number1);
      }
+    }
     }
 }
 }
@@ -101,16 +131,18 @@ void getOperators(){
 void setup() {
   Serial.begin(9600);
   screen.init();
-  screen.display(0, 0);
-  screen.display(1, 0);
-  screen.display(2, 0);
-  screen.display(3, 0);
+  
   screen.set(BRIGHT_TYPICAL);
-  screen.set(0);
+  delay(1000);
+  resetValues();
+  
 }
 
+
+
+
+
 void loop() {
-  Serial.println("Numero_1 :");
   Serial.println(number1);
   getOperators();
   delay(5);
