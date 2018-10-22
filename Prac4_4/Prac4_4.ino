@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-#define MAX_POS 24
+#define MAX_POS 50
 
 #define FORWARDS 45   //Se aleja del servo (Al S2)
 #define BACKWARDS 135 //Se acerca al servo (Al S1)
@@ -25,6 +25,7 @@ void calibrar() {
         delay(5);
       }
       s.write(90);
+      Serial.println("Movido hasta el extremo");
   }
   //Ir a la posición opuesta
   long t = millis();
@@ -37,13 +38,13 @@ void calibrar() {
 }
 
 void irAPos(int p) {
-  int dir = pos - p < 0 ? BACKWARDS : FORWARDS;
+  int dir = pos - p > 0 ? BACKWARDS : FORWARDS;
   int delta = abs(pos - p);
   long m = (millisStep / MAX_POS) * delta;
   //Mover
   long t = millis();
   s.write(dir);
-  while (millis() - t < m)
+  while (millis() - t <= m)
     delay(1);
   s.write(90);
   pos = p;
