@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 #define INPUT_SIZE 30
-#define COMMAND_SEP ';'
+#define COMMAND_SEP ";"
 #define PARAMETER_SEP ','
 
 #define INPUT_SIZE 30
@@ -61,49 +61,31 @@ void setup() {
   pinMode(PIN_STOP_2, INPUT);
   s.attach(PIN_SERVO);
   Serial.begin(9600);
-  //calibrar();
+  calibrar();
 }
 
-//String bfr;
-//void loop() {
-//  bfr = Serial.readStringUntil(COMMAND_SEP);
-//  if (bfr.length() > 0) {
-//    int pos = bfr.indexOf(COMMAND_SEP);
-//    String com = bfr.substring(0, pos);
-//    if (com.length() > 0) {
-//        int posSep = com.indexOf(PARAMETER_SEP);
-//        int p = atoi(com.substring(0,posSep));
-//        int d = atoi(com.substring(posSep + 1,com.length() - 1));
-//        Serial.println("Pos: " + String(p) + " Delay: " + String(d));
-//        //irAPos(p);
-//        //delay(d);
-//    }
-//  }
-//}
+String serialResponse = "";
 
-
-char input[INPUT_SIZE + 1];
-void loop() {
-  // Get next command from Serial (add 1 for final 0)
-  byte sz = Serial.readBytes(input, INPUT_SIZE);
-  // Add the final 0 to end the C string
-  input[sz] = 0;
-  // Read each command pair 
-  char* command = strtok(input, COMMAND_SEP);
-  while (command != NULL) {
-    // Split the command in two values
-    char* separator = strchr(command, PARAMETER_SEP);
-    if (separator != NULL)
-    {
+void loop()
+{
+  if ( Serial.available()) {
+    serialResponse = Serial.readStringUntil('\r\n');
+    char buf[INPUT_SIZE];
+    serialResponse.toCharArray(buf, sizeof(buf));
+    char *p = buf;
+    char *command;
+    while ((command = strtok_r(p, COMMAND_SEP, &p)) != NULL) {
+      char* separator = strchr(command, PARAMETER_SEP);
+      if (separator != NULL)
+      {
         *separator = 0;
         int p = atoi(command);
         ++separator;
         int d = atoi(separator);
-        Serial.println("Pos: " + String(p) + " Delay: " + String(d));
-        //irAPos(p);
+        //Serial.println("Pos: " + String(p) + " Delay: " + String(d));
+        irAPos(p);
         delay(d);
+      }
     }
-    // Find the next command in input string
-    command = strtok(NULL, COMMAND_SEP);
   }
 }
