@@ -1,6 +1,12 @@
 #include <Servo.h>
 
-#define MAX_POS 50
+#define INPUT_SIZE 30
+#define COMMAND_SEP ";"
+#define PARAMETER_SEP ','
+
+#define INPUT_SIZE 30
+
+#define MAX_POS 24
 
 #define FORWARDS 45   //Se aleja del servo (Al S2)
 #define BACKWARDS 135 //Se acerca al servo (Al S1)
@@ -58,10 +64,28 @@ void setup() {
   calibrar();
 }
 
-void loop() {
-  if (Serial.available() > 0) {
-    int pos = Serial.parseInt();
-    pos = constrain(pos, 0, MAX_POS);
-    irAPos(pos);
+String serialResponse = "";
+
+void loop()
+{
+  if ( Serial.available()) {
+    serialResponse = Serial.readStringUntil('\r\n');
+    char buf[INPUT_SIZE];
+    serialResponse.toCharArray(buf, sizeof(buf));
+    char *p = buf;
+    char *command;
+    while ((command = strtok_r(p, COMMAND_SEP, &p)) != NULL) {
+      char* separator = strchr(command, PARAMETER_SEP);
+      if (separator != NULL)
+      {
+        *separator = 0;
+        int p = atoi(command);
+        ++separator;
+        int d = atoi(separator);
+        //Serial.println("Pos: " + String(p) + " Delay: " + String(d));
+        irAPos(p);
+        delay(d);
+      }
+    }
   }
 }
