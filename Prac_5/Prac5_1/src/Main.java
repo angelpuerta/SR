@@ -1,14 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-import org.jline.utils.NonBlockingReader;
-
 public class Main {
 
-	public static void main(String[] args) throws InterruptedException, IOException {
+	public static void main(String[] args) {
 		Comunicador comunicador = new Comunicador();
 		comunicador.listarPuertos();
 

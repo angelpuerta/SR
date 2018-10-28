@@ -1,9 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-
-import javax.naming.CommunicationException;
 
 import command.Command;
 import command.Move;
@@ -62,7 +59,7 @@ public class SesionRecord {
 		System.out.println("Para dejar de reproducir los movimientos pulse Y");
 		comunicador.escribir(REPRODUCE_MOVEMENT);
 		while (position != 0 && !isChangeCharacterPressed()) {
-			comunicador.escribir(consumeCommand());
+			comunicador.escribir(consumeCommand()+";");
 		}
 		resetCommands();
 		freeMode();
