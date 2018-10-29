@@ -5,6 +5,7 @@
 #define PARAMETER_SEP ','
 
 #define INPUT_SIZE 30
+#define DT 1000
 
 #define MAX_POS 24
 
@@ -23,12 +24,16 @@
 #define RECORD 0
 #define REPRODUCE 1
 
+long last_t = 0;
+
 int forwards[] = {SLOW_FORWARDS, FORWARDS};
 int backwards[] = {SLOW_BACKWARDS, BACKWARDS};
 
 Servo s;
 
-int pos = 0;
+int posX = 0;
+int posY = 0;
+int posP = 0;
 int mode = 0;
 long millisStep[] = {0,0};
 
@@ -54,7 +59,7 @@ void calibrar(int mode) {
   Serial.println("Calibrado, ms: " + String(millisStep[mode])+ " MODO" + mode);
 }
 
-long irAPos(int p) {
+void irAPos(int &pos, int p) {
   int dir = pos - p > 0 ? forwards[mode] : backwards[mode];
   int delta = abs(pos - p);
   long m = (millisStep[mode] / MAX_POS) * delta;
@@ -65,7 +70,6 @@ long irAPos(int p) {
     delay(1);
   s.write(90);
   pos = p;
-  return m;
 }
 
 String serialResponse = "";
@@ -74,8 +78,7 @@ void readBuffer(){
     serialResponse = Serial.readStringUntil('\r\n');
 }
 
-void freeMode(){
- mode = REPRODUCE;
+void control(){
  int val = analogRead(PIN_X);
  if (val < 400)
     irAPos(pos-1);
@@ -84,16 +87,24 @@ void freeMode(){
   delay(15);
 }
 
+void freeMode(){
+  mode = REPRODUCE;
+  control();
+}
+
+void sendData() {
+  String data = "%d,%d,%d;";
+  sprintf(data, posX, posY, posP);
+  Serial.print(data);
+}
+
 void recordMode(){
  mode = RECORD;
- int val = analogRead(PIN_X);
- long time;
- if (val < 400)
-   time = irAPos(pos-1);
- else if (val < 900) 
-   time = irAPos(pos+1);  
- Serial.println(pos+","+time);
- delay(15);
+ control();
+ if (millis() - last_t > DT) {
+    sendData();
+    last_t = millis();
+ }
 }
 
 void reproduceMode(){
@@ -108,13 +119,13 @@ void reproduceMode(){
       if (separator != NULL)
       {
         *separator = 0;
-        int p = atoi(command);
+        int px = atoi(command);
         ++separator;
-        int d = atoi(separator);
-        //Serial.println("Pos: " + String(p) + " Delay: " + String(d));
-        irAPos(p);
-        delay(d);
-}}}
+        int py = atoi(separator);
+        irAPos(px);
+      }
+    }
+}
 
 void setup() {
   pinMode(PIN_X, INPUT);
@@ -124,19 +135,20 @@ void setup() {
   Serial.begin(9600);
   calibrar(RECORD);
   calibrar(REPRODUCE);
+  last_t = millis();
 }
 
-int movement_type = -1;
+int movement_type = 0;
 
 void loop()
 {
   readBuffer();
   
-    if(serialResponse == "LIBRE_MOVIMIENTO"){
+    if(serialResponse[0] == 'L'){
       movement_type = 0;
-    } else if(serialResponse == "GRABAR_MOVIMIENTO"){
+    } else if(serialResponse[0] == 'G'){
       movement_type = 1;
-    } else if(serialResponse == "REPRODUCIR_MOVIMIENTO"){
+    } else if(serialResponse[0] == 'R'){
       movement_type = 2;
     }
      

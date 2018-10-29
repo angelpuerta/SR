@@ -1,6 +1,5 @@
 #include <Servo.h>
 
-#define INPUT_SIZE 30
 #define COMMAND_SEP ";"
 #define PARAMETER_SEP ','
 
@@ -8,23 +7,24 @@
 
 #define MAX_POS 24
 
-#define FORWARDS 45   //Se aleja del servo (Al S2)
-#define BACKWARDS 135 //Se acerca al servo (Al S1)
+#define FORWARDS 135   //Se aleja del servo (Al S2)
+#define BACKWARDS 45 //Se acerca al servo (Al S1)
 
-#define PIN_SERVO 9
+#define PIN_SERVO 7
 
-#define PIN_STOP_1 3  //El del servo
-#define PIN_STOP_2 4  //El del extremo
+#define PIN_STOP_1 12  //El del servo
+#define PIN_STOP_2 11  //El del extremo
 
 Servo s;
-
+//0,500;20,500;10,2000;0,0;
 int pos = 0;
 long millisStep = 0;
 
 void calibrar() {
+  
   Serial.println("Calibrando...");
   //Si no esta en un fin
-  if (digitalRead(PIN_STOP_1) != LOW && digitalRead(PIN_STOP_2) != LOW) { 
+  if (digitalRead(PIN_STOP_2) != LOW) { 
       Serial.println("Moviendo hasta extremo...");
       s.write(FORWARDS);
       while (digitalRead(PIN_STOP_2) != LOW) {
@@ -82,7 +82,7 @@ void loop()
         int p = atoi(command);
         ++separator;
         int d = atoi(separator);
-        //Serial.println("Pos: " + String(p) + " Delay: " + String(d));
+        Serial.println("Pos: " + String(p) + " Delay: " + String(d));
         irAPos(p);
         delay(d);
       }

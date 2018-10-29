@@ -6,7 +6,8 @@ public class Main {
 
 		comunicador.conectarse("COM3");
 
-		comunicador.inicializarEscucha();
+		
+		comunicador.inicializarES();
 
 		SesionRecord record = new SesionRecord(comunicador);
 		record.execute();

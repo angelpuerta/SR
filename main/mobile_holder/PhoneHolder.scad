@@ -24,4 +24,12 @@ rotate([15,0,0])
 translate([0,-2,33])
 cube([50,17,3], center=true);
 
-cube([]);
+mikovsky(){
+translate([26,-20,60])
+rotate([0,90,0])
+ polygon(points=[[0,0],[3,12],[28,17],[33,0]]);
+
+translate([22,-20,60])
+rotate([0,90,0])
+ polygon(points=[[0,0],[3,12],[28,17],[33,0]]);
+   }
