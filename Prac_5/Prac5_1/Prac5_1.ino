@@ -24,9 +24,13 @@
 #define RECORD 0
 #define REPRODUCE 1
 
+#define FREE_MODE 0
+#define RECORDING 1
+#define PLAYING   2
+
 long last_t = 0;
 
-int forwards[] = {SLOW_FORWARDS, FORWARDS};
+int forwards[] =  {SLOW_FORWARDS,  FORWARDS};
 int backwards[] = {SLOW_BACKWARDS, BACKWARDS};
 
 Servo s;
@@ -42,7 +46,7 @@ void calibrar(int mode) {
   //Si no esta en un fin
   if (digitalRead(PIN_STOP_1) != LOW && digitalRead(PIN_STOP_2) != LOW) { 
       Serial.println("Moviendo hasta extremo...");
-      s.write(forwards[mode]);
+      s.write(FORWARDS);
       while (digitalRead(PIN_STOP_2) != LOW) {
         delay(5);
       }
@@ -56,20 +60,25 @@ void calibrar(int mode) {
      delay(1);
   millisStep[mode] = millis() - t;
   s.write(90);
-  Serial.println("Calibrado, ms: " + String(millisStep[mode])+ " MODO" + mode);
+  Serial.println("Calibrado, ms: " + String(millisStep[mode])+ " MODO: " + String(mode));
 }
 
-void irAPos(int &pos, int p) {
+void moveArm(Servo srv,int pos, int p) {
   int dir = pos - p > 0 ? forwards[mode] : backwards[mode];
   int delta = abs(pos - p);
   long m = (millisStep[mode] / MAX_POS) * delta;
   //Mover
   long t = millis();
-  s.write(dir);
+  srv.write(dir);
   while (millis() - t <= m)
     delay(1);
-  s.write(90);
-  pos = p;
+  srv.write(90);
+}
+
+void irAPos(int px, int py,int pp) {
+  px = constrain(px, 0, MAX_POS);
+  moveArm(s,posX,px);
+  posX = px;
 }
 
 String serialResponse = "";
@@ -79,11 +88,12 @@ void readBuffer(){
 }
 
 void control(){
- int val = analogRead(PIN_X);
- if (val < 400)
-    irAPos(pos-1);
- else if (val < 900) 
-    irAPos(pos+1);  
+  int val = analogRead(PIN_X);
+  if (val < 400) {
+    irAPos(posX + 1,posY,posP);
+  } else if (val < 900)  {
+    irAPos(posX - 1,posY,posP); 
+  } 
   delay(15);
 }
 
@@ -93,13 +103,13 @@ void freeMode(){
 }
 
 void sendData() {
-  String data = "%d,%d,%d;";
+  char* data = "%d,%d,%d;";
   sprintf(data, posX, posY, posP);
   Serial.print(data);
 }
 
 void recordMode(){
- mode = RECORD;
+
  control();
  if (millis() - last_t > DT) {
     sendData();
@@ -108,22 +118,13 @@ void recordMode(){
 }
 
 void reproduceMode(){
-    mode = REPRODUCE;
-    readBuffer();
     char buf[INPUT_SIZE];
     serialResponse.toCharArray(buf, sizeof(buf));
     char *p = buf;
     char *command;
     while ((command = strtok_r(p, COMMAND_SEP, &p)) != NULL) {
-      char* separator = strchr(command, PARAMETER_SEP);
-      if (separator != NULL)
-      {
-        *separator = 0;
-        int px = atoi(command);
-        ++separator;
-        int py = atoi(separator);
-        irAPos(px);
-      }
+      int pos = atoi(command);
+      irAPos(pos,0,0);
     }
 }
 
@@ -138,28 +139,30 @@ void setup() {
   last_t = millis();
 }
 
-int movement_type = 0;
+int state = FREE_MODE;
 
 void loop()
 {
   readBuffer();
   
     if(serialResponse[0] == 'L'){
-      movement_type = 0;
+      state = FREE_MODE;
     } else if(serialResponse[0] == 'G'){
-      movement_type = 1;
+      mode = RECORD;
+      state = RECORDING;
     } else if(serialResponse[0] == 'R'){
-      movement_type = 2;
+      mode = REPRODUCE;
+      state = PLAYING;
     }
      
-    switch(movement_type){
-      case 0:
+    switch(state){
+      case FREE_MODE:
         freeMode();
         break;
-      case 1:
+      case RECORDING:
         recordMode();
         break;
-      case 2:
+      case PLAYING:
         reproduceMode();
         break;  
       default:
