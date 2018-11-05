@@ -1,3 +1,4 @@
+#include <Ultrasonic.h>
 #include <Servo.h>
 
 #define MAX_POS 24
@@ -9,17 +10,21 @@
 #define END_X  20
 
 #define VASO_X 23
-#define VASO_Y 5
+#define VASO_Y 10
+#define DISTANCIA_VASO 50.0 //En centimentros
 
-#define PIN_SERVO_X 9
-#define PIN_SERVO_Y 10
-#define PIN_SERVO_P 11
+#define PIN_SERVO_X 5
+#define PIN_SERVO_Y 9
+#define PIN_SERVO_P 6
 
-#define PIN_STOP_1_X 3  //El del servo
-#define PIN_STOP_2_X 4  //El del extremo
+#define PIN_STOP_1_X 11  //El del servo
+#define PIN_STOP_2_X 12  //El del extremo
 
-#define PIN_STOP_1_Y 5  //El de servo
-#define PIN_STOP_2_Y 6  //El del extremo
+#define PIN_STOP_1_Y 3  //El de servo
+#define PIN_STOP_2_Y 7   //El del extremo
+
+#define PIN_TRIGGER 5
+#define PIN_ECHO    10
 
 class Arm {
   private:
@@ -59,13 +64,14 @@ class Arm {
     };
   
     void irAPos(int p) {
-      int dir = pos - p > 0 ? FORWARDS : BACKWARDS;
+      p = constrain(p, 0, MAX_POS);
+      int dir = pos - p < 0 ? FORWARDS : BACKWARDS;
       int delta = abs(pos - p);
       long m = (milliseconds / MAX_POS) * delta;
       //Mover
       long t = millis();
       srv.write(dir);
-      while (millis() - t <= milliseconds)
+      while (millis() - t <= m)
         delay(1);
       srv.write(90);
       pos = p;
@@ -79,29 +85,35 @@ class Arm {
 Arm* ejeX = new Arm();
 Arm* ejeY = new Arm();
 Servo pinza;
+Ultrasonic ultrasonic(PIN_TRIGGER,PIN_ECHO);
 
 void cerrar() {
-  pinza.write(30);
+  pinza.write(145);
 }
 
 void abrir() {
-  pinza.write(135);
+  pinza.write(20);
 }
 
 void dejar() {
+  Serial.println("Cogiendo cubo...");
   int pos = ejeX->getPos();
-  ejeY->irAPos(0);
+  ejeY->irAPos(MAX_POS);
   cerrar();
-  ejeY->irAPos(12);
-  ejeX->irAPos(VASO_X);  
+  Serial.println("Moviendo cubo...");
   ejeY->irAPos(VASO_Y);
+  ejeX->irAPos(VASO_X);  
+  Serial.println("Soltando cubo...");
   abrir();
+  Serial.println("Cubo dejado");
   ejeY->irAPos(12);
   ejeX->irAPos(pos);
 }
 
 bool vasoDetectado() {
-  return false;
+  double distance = ultrasonic.read(CM);
+  Serial.println("Distancia: " + String(distance));
+  return distance < DISTANCIA_VASO;
 }
 
 void setup() {
@@ -113,10 +125,11 @@ void setup() {
   //Calibrar
   ejeX->calibrar();
   ejeY->calibrar();
+  Serial.println("Todos los brazos calibrados");
   //Mover a la posicion inicial
   abrir();
-  ejeY->irAPos(12);
   ejeX->irAPos(20);
+  ejeY->irAPos(12);
 }
 
 void loop()
