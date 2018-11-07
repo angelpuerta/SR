@@ -53,6 +53,7 @@ void setup() {
    // Inicializar el led
    pinMode(LED_PIN,OUTPUT);
    apagar();
+   Serial.println("Servidor iniciado");
 }
 
 void loop(){
