@@ -1,8 +1,17 @@
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
 #include <ArduinoJson.h>
 #include <Ethernet.h> //Importamos librería Ethernet
 
 #define JSON_BUFFER_SIZE 80
 #define LED_PIN 9
+
+#define SENSOR_PIN 5
+
+#define DHT_OK 0
+#define DHT_ERROR_TEMP 1
+#define DHT_ERROR_HUM  2
 
 byte mac[] = {0x54, 0x55, 0x58, 0x10, 0x00, 0x24};
 
@@ -11,6 +20,8 @@ IPAddress dnServer(156, 35, 14 , 2);
 IPAddress gateway(192, 168, 61, 13);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress ip(192, 168, 61, 204);
+
+DHT_Unified dht(SENSOR_PIN, DHT11);
 
 //Control del led
 
@@ -28,19 +39,42 @@ void encender() {
   digitalWrite(LED_PIN,HIGH);
 }
 
+int readValsFromDHT(float &hum, float &temp) {
+    sensors_event_t event; 
+    dht.temperature().getEvent(&event);
+    if (isnan(event.temperature)) 
+      return DHT_ERROR_TEMP;
+    else
+      temp = event.temperature;
+    dht.humidity().getEvent(&event);
+    if (isnan(event.relative_humidity)) 
+      return DHT_ERROR_HUM;
+    else
+      temp = event.relative_humidity;
+    return DHT_OK;
+}
+
 void mandarJSON(EthernetClient cliente) {
   Serial.println("Mandando info de los sensores"); 
   StaticJsonBuffer<JSON_BUFFER_SIZE> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
-  root["temperatura"] = 15.0;
-  root["humedad"] = 0.5;
-  root["led"] = ledState;
-  //Mandar headers y mandar
-  cliente.println("HTTP/1.0 200 OK");
-  cliente.println("Content-Type: application/json");
-  cliente.println("Connection: close");
-  cliente.println();
-  root.prettyPrintTo(cliente);
+  //Conseguir datos
+  float temp, hum;
+  if (readValsFromDHT(hum, temp) == DHT_OK) { //Todo correcto
+    root["temperatura"] = temp;
+    root["humedad"] = hum;
+    root["led"] = ledState;
+    //Mandar headers y mandar
+    cliente.println("HTTP/1.0 200 OK");
+    cliente.println("Content-Type: application/json");
+    cliente.println("Connection: close");
+    cliente.println();
+    root.prettyPrintTo(cliente);
+  } else { //Error
+    cliente.println("HTTP/1.0 503 OK Service Temporarily Unavailable");
+    cliente.println("Connection: close");
+    cliente.println();
+  }
 }
 
 void setup() {
@@ -74,10 +108,12 @@ void loop(){
            } else if(peticion.indexOf("ledOn") != -1){
               encender();
               cliente.println("HTTP/1.1 200 OK");
+              cliente.println("Connection: close");
               cliente.println();
            } else if(peticion.indexOf("ledOff") != -1){
               apagar();
               cliente.println("HTTP/1.1 200 OK");
+              cliente.println("Connection: close");
               cliente.println();
            }
            break;
