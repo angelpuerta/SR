@@ -12,10 +12,12 @@
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfCOQBuThKoJ0Xuomi72r5bP_sROUvJKM&callback=initMap"></script>
         <!-- Script principal -->
         <script src="sensor.js"></script>
-        <script src="script.js"></script>
+        <script defer src="script.js"></script>
     </head>
-    <header>
-        <p>Hola que tal, soy información</p>
+    <header id="info">
+        <p id="infoText">Todo normal</p>
+		<p> Temperatura máxima: </p>
+		<input type="range" min="-10" max="50" value="20" class="slider" id="maxTempRange">
     </header>
     <body>
         <div id="map"></div>

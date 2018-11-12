@@ -27,14 +27,15 @@ class Sensor {
             this.showInfo(this.getRandomData());
             return;
         }
+		var t = this;
         $.ajax({
             dataType: "json",
-            url: this.getUrl() + "/sensor",
+            url: t.getUrl() + "/sensor",
             success: function(data) {
-                this.showInfo(data);
+                t.showInfo(data);
             },
             error: function() {
-                alert("No se ha podido recibir información del sensor: " + this.name);
+                alert("No se ha podido recibir información del sensor: " + t.name);
             }
         });
     }

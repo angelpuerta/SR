@@ -1,6 +1,4 @@
-#include <Adafruit_Sensor.h>
 #include <DHT.h>
-#include <DHT_U.h>
 #include <ArduinoJson.h>
 #include <Ethernet.h> //Importamos librería Ethernet
 
@@ -21,7 +19,7 @@ IPAddress gateway(192, 168, 61, 13);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress ip(192, 168, 61, 204);
 
-DHT_Unified dht(SENSOR_PIN, DHT11);
+DHT dht(SENSOR_PIN, DHT11);
 
 //Control del led
 
@@ -40,17 +38,16 @@ void encender() {
 }
 
 int readValsFromDHT(float &hum, float &temp) {
-    sensors_event_t event; 
-    dht.temperature().getEvent(&event);
-    if (isnan(event.temperature)) 
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    if (isnan(t)) 
       return DHT_ERROR_TEMP;
     else
-      temp = event.temperature;
-    dht.humidity().getEvent(&event);
-    if (isnan(event.relative_humidity)) 
+      temp = t;
+    if (isnan(h)) 
       return DHT_ERROR_HUM;
     else
-      temp = event.relative_humidity;
+      hum = h;
     return DHT_OK;
 }
 
@@ -67,6 +64,7 @@ void mandarJSON(EthernetClient cliente) {
     //Mandar headers y mandar
     cliente.println("HTTP/1.0 200 OK");
     cliente.println("Content-Type: application/json");
+    cliente.println("Access-Control-Allow-Origin: *");
     cliente.println("Connection: close");
     cliente.println();
     root.prettyPrintTo(cliente);
@@ -83,7 +81,8 @@ void setup() {
    servidor.begin();
    Serial.println("Setup...");
    // Imprimir la IP
-   Serial.println("IP Local: " + Ethernet.localIP());
+   Serial.print("IP Local: "); 
+   Serial.println(Ethernet.localIP());
    // Inicializar el led
    pinMode(LED_PIN,OUTPUT);
    apagar();
@@ -108,11 +107,13 @@ void loop(){
            } else if(peticion.indexOf("ledOn") != -1){
               encender();
               cliente.println("HTTP/1.1 200 OK");
+              cliente.println("Access-Control-Allow-Origin: *");
               cliente.println("Connection: close");
               cliente.println();
            } else if(peticion.indexOf("ledOff") != -1){
               apagar();
               cliente.println("HTTP/1.1 200 OK");
+              cliente.println("Access-Control-Allow-Origin: *");
               cliente.println("Connection: close");
               cliente.println();
            }
