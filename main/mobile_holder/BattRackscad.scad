@@ -8,16 +8,17 @@ translate([15,0.5,-12])
 cube([14,11.5,4]);
 }
 
-translate([0,40,0])
-rotate(180)
+mirror(){
 union(){
 translate([12,0.5,-12])
 cube([3,40,20]);
-translate([15,28,-12])
+translate([15,0.5,-12])
 cube([14,11.5,4]);
 }
+}
+
 
 translate([0,40,-2.5])
 rotate(90)
-cube([3,30,20],center=true);
+cube([3,30,18],center=true);
 
