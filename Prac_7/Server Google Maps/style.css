@@ -5,7 +5,7 @@ html, body {
     font: 100 15px 'Tahoma', Sans-Serif;
 }
 
-header p {
+#info {
     text-align: center;
     font-size: 1.2em;
     margin: auto;

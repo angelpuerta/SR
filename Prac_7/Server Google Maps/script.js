@@ -1,3 +1,31 @@
+
+setInterval(function(){
+    checkSensores();
+},5000);
+
+
+console.log("Configurado...");
+
+function checkSensores() {
+	$.ajax({
+        dataType: "json",
+        url: "http://192.168.61.204/sensor",
+        success: function(data) {
+			var maxTemp = document.getElementById("maxTempRange").value;
+            if (data.temperatura > maxTemp) { //Alarma
+				document.getElementById("info").style.backgroundColor = "red";
+				document.getElementById("infoText").innerText = "Alarma: la temperatura ha alcanzado cuotas peligrosas!!!";
+			} else { //Correcto
+				document.getElementById("info").style.backgroundColor = "greenyellow";
+				document.getElementById("infoText").innerText = "Todo correcto";
+			}
+        },
+        error: function() {
+            console.log("No se ha podido recibir información del sensor");
+        }
+    });
+}
+
 function initMap() {
     
     var mainMap = new google.maps.Map(document.getElementById('map'), {
@@ -15,10 +43,7 @@ function initMap() {
 function changeLed(state) {
     console.log("Cambiando a: " + (state ? "Encendido" : "Apagado"));
     var url = state ? 'ledOn' : 'ledOff';
-    $.ajax({
-        url: "http://192.168.61.204/" + url,
-        error: function() {
-            alert("No se ha podido cambiar el estado del LED");
-        }
-    });
+	$.get("http://192.168.61.204/" + url, function(d,s) {
+		console.log("Done: " + s);
+	});
 }
