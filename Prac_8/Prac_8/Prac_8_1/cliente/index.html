@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <table>
+			<tr>
+				<td>
+				Estado :
+				</td>
+				<td id = "estado"></td>
+			</tr>
+			<tr>
+				<td>
+				Alarma activada :
+				</td>
+				<td id = "estado_alarma"></td>
+			</tr>
+			<tr>
+				<td>
+				Tiempo de espera :
+				</td>
+				<td id="tiempo_espera"></td>
+			</tr>
+		</table>
+		<form method="get" action="" id="waiting_time_submit">
+		Cambiar tiempo de espera a <input type="text" id="waiting_time"><br/>
+		<input type="submit" value="submit"/>
+		</form>
+		
+		<label class="switch">
+		<input type="checkbox" id ="switch"/>
+		<span class="slider"></span>
+		</label>
+		
+    </body>
+</html>

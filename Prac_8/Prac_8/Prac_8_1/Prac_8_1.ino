@@ -1,5 +1,6 @@
 #include <Time.h>
 #include <Ethernet.h> //Importamos librería Ethernet
+#include <ArduinoJson.h>
 #define JSON_BUFFER_SIZE 80
 
 
@@ -24,7 +25,6 @@ IPAddress ip(192, 168, 61, 204);
 int leds[] = {3,4,5};
 int estado = 0;
 boolean muted = false;
-long actual = 0;
 long wait_time = WAITING_TIME;
 
 void setup() {
@@ -76,27 +76,24 @@ void mandarJSON(EthernetClient cliente) {
   String sensor_status = "";
     switch(estado){
       case OPEN:
-        estado = "OPEN";
+        sensor_status = "OPEN";
         break;
       case CLOSE:
-        estado = "CLOSE";
+        sensor_status = "CLOSE";
         break;  
       case OPEN_FOR_A_WHILE:
-        estado = "OPEN_FOR_A_WHILE";
+        sensor_status = "OPEN_FOR_A_WHILE";
         break;  
     }
     root["sensor_status"] = sensor_status;
+    root["muted"] = muted;
+    root["wait_time"] = wait_time;
     //Mandar headers y mandar
     cliente.println("HTTP/1.0 200 OK");
     cliente.println("Content-Type: application/json");
     cliente.println("Connection: close");
     cliente.println();
     root.prettyPrintTo(cliente);
-  } else { //Error
-    cliente.println("HTTP/1.0 503 OK Service Temporarily Unavailable");
-    cliente.println("Connection: close");
-    cliente.println();
-  }
 }
 
 void OKConection(EthernetClient cliente){
@@ -110,9 +107,9 @@ int calculateWaitingTime(String waitingTime){
   if(indexOfSlash == -1)
     return -1;
   String digit = waitingTime.substring(indexOfSlash);
-  int future_time = atoi(digit);
-  Serial.println("Tiempo cambiado a"+future_time);
-  return futre_time;
+  int future_time = digit.toInt();
+  Serial.println("Tiempo cambiado a "+future_time);
+  return future_time;
 }
 
 void loop() {
@@ -129,20 +126,23 @@ void loop() {
          if (c == '\n'){
            Serial.println("Responder");
            // contiene la cadena "sensor"
-           if(peticion.indexOf("sensor") != -1){
+           if(peticion.indexOf("sensor") != -1)
               mandarJSON(cliente);
            else if(peticion.indexOf("muted") != -1){
               muted = !muted;
-              OKConection(cliente);
-           else if(petiticion.indexOf("changeTime") != -1){
-               waiting_time = calculateWaitingTime(peticion); 
-               OKConection(cliente);    
+              mandarJSON(cliente);
+           }
+           else if(peticion.indexOf("changeTime") != -1){
+               wait_time = calculateWaitingTime(peticion); 
+               mandarJSON(cliente);    
            }
            break;
          }
+       }
        }
        // Pequeña pausa para asegurar el envio de datos
      delay(1000);
      cliente.stop();// Cierra la conexión
  }
+}
   
