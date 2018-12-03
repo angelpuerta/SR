@@ -1,9 +1,15 @@
 #include "ThingSpeak.h"
 #include <SPI.h>
 #include <Ethernet.h>
+#include "HttpClient.h"
+
+#define SERVER "http://api.thingspeak.com"
 
 #define CH_ID 631578
 #define APIKEY "DBV1E89SPIA2JH3I"
+
+#define TALKBACK_API "9FRGDZL1QJW750QH"
+#define TALKBACK_ID "29332"
 
 #define SENSOR_PIN A0
 #define LED_PIN 2
@@ -16,6 +22,43 @@ IPAddress subnet(255, 255, 255, 0);
 IPAddress ip(192, 168, 61, 204);
 
 EthernetClient client;
+
+void checkTalkBack()
+{
+  String talkBackCommand;
+  char charIn;
+  
+  if (client.connect(SERVER, 80)) {
+    Serial.println("connected");
+    // Make your API request:
+    client.println("GET /talkbacks/29332/commands/execute?api_key=9FRGDZL1QJW750QH");
+    client.println("Connection: close");
+    client.println();
+  } 
+  else {
+    Serial.println("connection failed");
+    return;
+  }
+  Serial.print("Comando: "); 
+  while (client.available()) {
+    charIn = client.read();
+    talkBackCommand += charIn;
+    Serial.print(charIn);
+  }
+  Serial.println();
+  
+  // Turn On/Off the On-board LED
+  if (talkBackCommand == "ON")
+  {  
+    digitalWrite(LED_PIN, HIGH);
+  }
+  else if (talkBackCommand == "OFF")
+  {      
+    digitalWrite(LED_PIN, LOW);
+  }
+  
+  Serial.flush(); 
+}
 
 void setup() {
   pinMode(SENSOR_PIN, INPUT);
@@ -37,9 +80,10 @@ void loop() {
   int x = ThingSpeak.writeField(CH_ID, 1, val, APIKEY);
   if(x == 200){
     Serial.println("Channel update successful.");
-  }
-  else {
+  } else {
     Serial.println("Problem updating channel. HTTP error code " + String(x));
   }
-  delay(10000); // Wait 20 seconds to update the channel again
+  checkTalkBack();
+  delay(5000); // Wait 10 seconds to update the channel again
 }
+
