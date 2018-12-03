@@ -1,0 +1,885 @@
+Setup...
+IP Local: 192.168.61.34
+Servidor iniciado
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+5000
+Muted :
+0
+Nueva peticion
+Responder
+
+GET /changeTime/6000 HTTP/1.1
+
+Tiempo cambiado a 
+6000
+Estado :
+1
+waiting_time :
+6000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+6000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+6000
+Muted :
+0
+Nueva peticion
+Responder
+
+GET /changeTime/3500 HTTP/1.1
+
+Tiempo cambiado a 
+3500
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+3500
+Muted :
+0
+Nueva peticion
+Responder
+
+GET /changeTime/4000 HTTP/1.1
+
+Tiempo cambiado a 
+4000
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+GET /mute/ HTTP/1.1
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+GET /mute/ HTTP/1.1
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+0
+Nueva peticion
+Responder
+
+GET /mute/ HTTP/1.1
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1
+Nueva peticion
+Responder
+
+Estado :
+1
+waiting_time :
+4000
+Muted :
+1

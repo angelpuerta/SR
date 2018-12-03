@@ -1,17 +1,36 @@
 9g_motor();
 
 module 9g_motor(){
-	difference(){			
-		union(){
-			#color("steel blue") cube([32.3,12.5,29.7], center=true);
-			color("steel blue") translate([0,0,0]) cube([32,12,2], center=true);
-			color("steel blue") translate([5.5,0,2.75]) cylinder(r=6, h=25.75, $fn=20, center=true);
-			color("steel blue") translate([-.5,0,2.75]) cylinder(r=1, h=25.75, $fn=20, center=true);
-			color("steel blue") translate([-1,0,2.75]) cube([5,5.6,24.5], center=true);		
-			color("white") translate([5.5,0,3.65]) cylinder(r=2.35, h=29.25, $fn=20, center=true);				
-		}
-		for ( hole = [14,-14] ){
-			translate([hole,0,5]) cylinder(r=2.2, h=4, $fn=20, center=true);
-		}	
-	}
+    width = 11.8;
+    height_til = 16;
+    height_total = 31;
+    depth_til = 22.2;
+    depth_total = 32.2;
+    
+
+    difference(){
+    cube([depth_til,width,height_til],center=true);
+    translate([0,0,height_til/2])
+    union(){
+    cube([depth_total,width,2],center = true);        
+   	cube([depth_til, width, height_total-height_til],center = true);
+    translate([6,0,0])
+    union(){
+	cylinder(r=4, h = height_til+4, $fn = 20, center = true);		
+    cylinder(r=2, h = height_til+8, $fn = 20, center = true);	
+        }   
+    } 
 }
+}
+
+module arm(height=1, large=10, max_width=2){
+    hull(){
+        cylinder(r=1, h=height, $fn=20);
+    translate([large,0,0])
+        cylinder(r=1, h=height, $fn=20);
+        translate([large/2,0,0])
+        cylinder(r=max_width, h=height, $fn=20);
+    }
+        
+}
+
