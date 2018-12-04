@@ -12,10 +12,7 @@ class Sensor {
         this.infoWindow = new google.maps.InfoWindow({
             content: 'empty'
         });
-        let obj = this;
-        this.marker.addListener('click', function() {
-            obj.displayDataInMarker();
-        });
+        this.marker.addListener('click', this.displayDataInMarker.bind(this));
     }
     
     getUrl() {
@@ -27,13 +24,11 @@ class Sensor {
             this.showInfo(this.getRandomData());
             return;
         }
-		var t = this;
+		var urlSensor = this.getUrl() + "/sensor";
         $.ajax({
             dataType: "json",
-            url: t.getUrl() + "/sensor",
-            success: function(data) {
-                t.showInfo(data);
-            },
+            url: urlSensor,
+            success: this.showInfo.bind(this, data),
             error: function() {
                 alert("No se ha podido recibir información del sensor: " + t.name);
             }
