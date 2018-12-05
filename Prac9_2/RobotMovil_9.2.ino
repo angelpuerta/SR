@@ -12,15 +12,12 @@ int pinServoDer = 9;
 int pinInfraRojoIzq = 2;
 int pinInfraRojoDer = 3;
 
-int der = 0;
-int iz = 0;
-
-int numLoop = 1;
-
+int numLoop = 0;
+int time = 0;
 
 void setup(){
  //Serial.begin(9600); // Descomentar si queréis debuguear 
-
+ numLoop = 0;
  pinMode(pinInfraRojoDer, INPUT);
  pinMode(pinInfraRojoIzq, INPUT);
 
@@ -28,7 +25,7 @@ void setup(){
  servoDer.attach(pinServoDer);
 }
 void loop(){
-   //No detecta linea, se para
+   //No detecta linea, busca
   if(digitalRead(pinInfraRojoIzq) == NO_LINEA && digitalRead(pinInfraRojoDer) == NO_LINEA){
     entrarEnPista();
   } 
@@ -43,45 +40,40 @@ void loop(){
  }
 
   void  entrarEnPista(){
-    if(digitalRead(pinInfraRojoIzq) == LINEA || digitalRead(pinInfraRojoDer) == LINEA){
-        numLoop = 1;
-        servoIzq.write(90);
-        servoDer.write(90);
-    }
-    else{
-      servoIzq.write(90-numLoop*5);
-      servoDer.write(90+numLoop*5);
-      numLoop = numLoop+1;
-    }
-    delay(100);
+      servoIzq.write(90-numLoop);
+      servoDer.write(180);
+      incLoop();
+    delay(800);
   }
 
  
   void corregirTrayectoria(){
+      
     //linea detectada  a la derecha  
     if(digitalRead(pinInfraRojoIzq) == NO_LINEA && digitalRead(pinInfraRojoDer) == LINEA){
       servoIzq.write(0);
       servoDer.write(90);
-      der = 1;
-      iz = 0;
     }
     //linea detectada  a la izquierda  
     else  if(digitalRead(pinInfraRojoIzq) == LINEA && digitalRead(pinInfraRojoDer) == NO_LINEA){
       servoIzq.write(90);
       servoDer.write(180);
-      iz = 1;
-      der = 0;
     }
+    numLoop = 0;
     delay(175); // Media vuelta
  }
  
  void avanzar(){
+    
     servoIzq.write(0);
     servoDer.write(180);
-    der = 0;
-    iz = 0;
+    numLoop = 0;
     delay(175); // Media vuelta
    }
-
+   void incLoop(){
+    if(numLoop<60){
+      numLoop++;
+    }
+   }
 
 
