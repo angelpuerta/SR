@@ -9,6 +9,7 @@ module 9g_motor(){
     
 
     difference(){
+    union(){
     cube([depth_til,width,height_til],center=true);
     translate([0,0,height_til/2])
     union(){
@@ -19,7 +20,16 @@ module 9g_motor(){
 	cylinder(r=4, h = height_til+4, $fn = 20, center = true);		
     cylinder(r=2, h = height_til+8, $fn = 20, center = true);	
         }   
-    } 
+    }}
+    
+    #translate([-depth_total/2.0,0,0])
+    cylinder(h = height_total,r = 2,
+    $fn = 20);
+    mirror()
+    { #translate([-depth_total/2.0,0,0])
+    cylinder(h = height_total,r = 2,
+    $fn = 20);
+    }
 }
 }
 
@@ -34,3 +44,7 @@ module arm(height=1, large=10, max_width=2){
         
 }
 
+
+module motor_holder(width = 30){
+   cylinder(h)
+}

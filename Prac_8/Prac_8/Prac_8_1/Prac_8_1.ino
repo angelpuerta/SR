@@ -60,12 +60,12 @@ void sound(){
 
 void doorLoop(){  
  if(digitalRead(PIN_STOP) == LOW){
-   Serial.println("Pressed");
   if(estado == CLOSE){
     estado = OPEN;
     actual = millis();
     }
   if(millis()-actual >= wait_time){
+      
       estado = OPEN_FOR_A_WHILE;
       if(!muted)
         sound();
