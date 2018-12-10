@@ -63,6 +63,7 @@ bool hayAlgo() {
 
   long responseTime = pulseIn(PIN_ECHO, HIGH);
   long distance = int(0.01716*responseTime);
+  Serial.println(distance);
   //Comprobar
   return distance <= 10;
 }
@@ -77,26 +78,6 @@ void setup() {
 }
 
 void loop() {
-  updateBuffer();
-  Serial.println(bufferLectura);
-  if (bufferLectura.length() >= 4) {
-    if (bufferLectura.equals(PASSWORD)) { //Es correcta
-      digitalWrite(GREEN_LED, LOW);
-      delay(1000);
-      abrir();
-      double inicioCuentaTiempo = millis();
-      while(millis() - inicioCuentaTiempo < 5000) {
-        if (hayAlgo())
-          inicioCuentaTiempo = millis();
-        else if (teclado.getKey() == 'C')
-          break;
-      }
-      cerrar();
-    } else { //Contraseña incorrecta
-      parpadear();
-      cerrar();
-    }
-    bufferLectura = "";
-  }
-  delay(200);
+  hayAlgo();
+  
 }

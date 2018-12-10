@@ -1,17 +1,16 @@
 #include <TM1637.h>
 
-const int pinTrig = 9;
-const int pinEcho = 6;
-const int SENSOR = 8;
+const int PIN_TRIG = 9;
+const int PIN_ECHO = 11;
 const int pinClk = 3;
 const int pinDio = 4;
 const int RED_LED = 10;
 
-int RGB_LEDS[] = {RED_LED, 11, 12};
+int RGB_LEDS[] = {RED_LED, 13, 12};
 int RGB_length = sizeof(RGB_LEDS)/sizeof(int);
 
-const int DISTANCE_TRESHOLD = 0.1;
-const long MIN_DISTANCE = 5.0;
+const int DISTANCE_TRESHOLD = 20;
+const long MIN_DISTANCE = 25.0;
 
 const int MIN_COUNT = 3;
 const float MIN_VELOCITY = 1.0;
@@ -20,8 +19,8 @@ TM1637 screen(pinClk,pinDio);
 
 void setup() {
   Serial.begin(9600);
-  pinMode(pinTrig, OUTPUT);
-  pinMode(pinEcho, OUTPUT);
+  pinMode(PIN_TRIG, OUTPUT);
+  pinMode(PIN_ECHO, INPUT);  
 
   for(int i; i < RGB_length; i++){
     pinMode(RGB_LEDS[i], OUTPUT);
@@ -46,19 +45,26 @@ boolean isSomethingMoving(){
  * Detected distance in cm
  */
 long detectedDistance (){
-  digitalWrite(pinTrig, HIGH);
+  //Medir distancia
+  digitalWrite(PIN_TRIG, LOW);
   delayMicroseconds(5);
-  digitalWrite(pinTrig, HIGH);
+
+  digitalWrite(PIN_TRIG, HIGH); /* Emitimos el pulso ultrasónico */
   delayMicroseconds(10);
 
-  long responseTime = pulseIn(pinEcho, HIGH);
+  long responseTime = pulseIn(PIN_ECHO, HIGH);
+
   return long(0.01716*responseTime);
 }
 
 void updateScreen(int time){
+  Serial.println("DISPLAY");
+  if(time < 0)
+    time = 0;
+  Serial.println(time);
   screen.clearDisplay();
   screen.display(0, time);
-  delay(500);
+  delay(250);
 }
 
 /*
@@ -72,7 +78,7 @@ int getTime (){
  * Velocity for that iteration
  */
  float getVelocity(){
-  return ((random(100)+100)/100.0)*MIN_VELOCITY;
+  return 0.5;//((random(100)+100)/100.0)*MIN_VELOCITY;
 }
 
 boolean play(){
@@ -81,40 +87,53 @@ boolean play(){
   float velocity = getVelocity();
 
   long difference = wait - (millis()-startTime)*velocity;
-  updateScreen(wait%1000);
+  updateScreen(wait/1000);
+  Serial.println("PLAY");
+  Serial.println(difference);
 
+  
   while(difference > 0){
     if(isSomethingMoving())
       return false;     
     difference = wait - (millis()-startTime)*velocity;
-    updateScreen(difference%1000); 
+    Serial.println(difference);
+    updateScreen(difference/1000); 
   }
+  screen.clearDisplay();
   return true;
 }
 
-void win(){
-   for(int i; i < 15; i++){
-    digitalWrite(RGB_LEDS[i+1%3], HIGH);
-    digitalWrite(RGB_LEDS[i%3],LOW);
-    delay(100);
+void win(){ 
+   for(int i = 0; i < 15; i++){
+    digitalWrite(RGB_LEDS[(i+1)%3], HIGH);
+    delay(200);
+    digitalWrite(RGB_LEDS[(i%3)],LOW);
+    delay(200);
    }
+    Serial.println("YOU WIN");
 }
 
 void lose(){
   screen.clearDisplay();
-  for(int i; i < 10; i++){
+  for(int i=0; i < 10; i++){
     digitalWrite(RED_LED, HIGH);
-    delay(50);
+    delay(100);
     digitalWrite(RED_LED,LOW);
+    delay(100);
   }
+  Serial.println("YOU LOOSE");
+  delay(1000);
 }
 
  
 
 void loop() {
-  if(detectedDistance() <= MIN_DISTANCE)
+  if(detectedDistance() <= MIN_DISTANCE){
+    Serial.println(detectedDistance());
     win();
-  if(!play())
+  }
+  else if(!play())
     lose();
+  delay(1000);
     
 }
