@@ -38,6 +38,11 @@ boolean isSomethingMoving(){
   long previous_distance = detectedDistance();
   delay(100);
   long actual_distance = detectedDistance();
+  if(previous_distance  > 3000 || actual_distance > 3000)
+    return false;
+  Serial.println(previous_distance);
+  Serial.println(actual_distance);
+  delay(500);
   return fabs(actual_distance - previous_distance) > DISTANCE_TRESHOLD;  
 }
 
@@ -128,12 +133,12 @@ void lose(){
  
 
 void loop() {
-  if(detectedDistance() <= MIN_DISTANCE){
+ if(detectedDistance() <= MIN_DISTANCE){
     Serial.println(detectedDistance());
     win();
   }
   else if(!play())
     lose();
-  delay(1000);
+  delay(500);
     
 }
