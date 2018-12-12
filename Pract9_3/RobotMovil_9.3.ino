@@ -3,6 +3,9 @@
 Servo servoIzq;
 Servo servoDer;
 
+int PIN_TRIG = 0;
+int PIN_ECHO = 0;
+
 int NO_LINEA = LOW; 
 int LINEA = HIGH;
 
@@ -20,18 +23,24 @@ long xTiempo = 1000;
 int iz = 1;
 int der = 0;
 
+int THRESHOLD = 70;
+
 void setup(){
  Serial.begin(9600); // Descomentar si queréis debuguear 
  numLoop = 0;
  pinMode(pinInfraRojoDer, INPUT);
  pinMode(pinInfraRojoIzq, INPUT);
-
+ pinMode(PIN_TRIG, OUTPUT);
+ pinMode(PIN_ECHO, INPUT);  
  servoIzq.attach(pinServoIzq);
  servoDer.attach(pinServoDer);
 }
 void loop(){
+  if(isSomething()){
+    entrarEnPista()
+  }
    //No detecta linea, busca
-  if(digitalRead(pinInfraRojoIzq) == NO_LINEA && digitalRead(pinInfraRojoDer) == NO_LINEA){
+  else if(digitalRead(pinInfraRojoIzq) == NO_LINEA && digitalRead(pinInfraRojoDer) == NO_LINEA){
     
     
     entrarEnPista();
@@ -125,3 +134,26 @@ void loop(){
       delay(50);
     }
    }
+
+ void esquivar(){
+      servoIzq.write(90);
+      servoDer.write(180);
+      
+ }
+
+ boolean isSomething(){
+  return detectedDistance() < THRESHOLD;
+ }
+ long detectedDistance (){
+  //Medir distancia
+  digitalWrite(PIN_TRIG, LOW);
+  delayMicroseconds(5);
+
+  digitalWrite(PIN_TRIG, HIGH); /* Emitimos el pulso ultrasónico */
+  delayMicroseconds(10);
+
+  long responseTime = pulseIn(PIN_ECHO, HIGH);
+
+  return long(0.01716*responseTime);
+}
+ 
