@@ -13,15 +13,15 @@
 #define OPEN_FOR_A_WHILE 2
 
 
-#define WAITING_TIME 10000
+#define WAITING_TIME 1000
 
-byte mac[] = {0x54, 0x55, 0x58, 0x10, 0x00, 0x24};
+byte mac[] = {0x54, 0x55, 0x58, 0x10, 0x00, 0x23};
 
 EthernetServer servidor(80); //Puerto en el 80
-IPAddress dnServer(192, 168, 56 , 1);
+IPAddress dnServer(156, 35, 98 , 201);
 IPAddress gateway(192, 168, 61, 13);
 IPAddress subnet(255, 255, 255, 0);
-IPAddress ip(192, 168, 61, 22);
+IPAddress ip(156, 35, 98, 94);
 
 int leds[] = {3,4,5};
 int estado = 0;
@@ -51,9 +51,7 @@ void setup() {
 void sound(){
   Serial.println("Sound");
   analogWrite(tonePin,442);
-  delay(250);     
-  analogWrite(tonePin,442);
-  delay(250);
+  delay(25);     
   analogWrite(tonePin,0);
 
 }
@@ -127,7 +125,6 @@ int calculateWaitingTime(String waitingTime){
 
 void serverLoop(){
  EthernetClient cliente = servidor.available();
- doorLoop();
  if (cliente) {
      Serial.println("Nueva peticion");
      String peticion="";
@@ -167,9 +164,12 @@ void serverLoop(){
        Serial.println("Muted :");
        Serial.println(muted);
      cliente.stop();// Cierra la conexión 
-}}
+}
+
+}
 
 void loop() {
   serverLoop();
+  doorLoop();
 }
   
